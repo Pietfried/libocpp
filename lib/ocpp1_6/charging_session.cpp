@@ -2,7 +2,7 @@
 // Copyright 2020 - 2022 Pionix GmbH and Contributors to EVerest
 #include <mutex>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 #include <everest/timer.hpp>
 
 #include <ocpp1_6/charging_session.hpp>

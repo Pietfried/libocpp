@@ -3,7 +3,7 @@
 #include <ocpp1_6/charge_point_configuration.hpp>
 #include <ocpp1_6/message_queue.hpp>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 
 namespace ocpp1_6 {
 

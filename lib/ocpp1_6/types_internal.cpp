@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 #include <date/date.h>
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 
 namespace ocpp1_6 {
 CiString::CiString(const std::string& data, size_t length) : length(length) {

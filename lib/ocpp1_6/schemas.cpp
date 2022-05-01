@@ -5,7 +5,7 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 
 namespace ocpp1_6 {
 Schemas::Schemas(std::string main_dir) {

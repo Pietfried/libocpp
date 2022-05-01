@@ -9,7 +9,7 @@
 #include <vector>
 
 #include <boost/filesystem.hpp>
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 #include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
 

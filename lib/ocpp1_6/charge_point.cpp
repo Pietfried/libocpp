@@ -3,7 +3,7 @@
 #include <thread>
 
 #include <date/date.h>
-#include <everest/logging.hpp>
+#include <everest/logging/logging.hpp>
 
 #include <ocpp1_6/charge_point.hpp>
 #include <ocpp1_6/charge_point_configuration.hpp>
