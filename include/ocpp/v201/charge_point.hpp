@@ -6,7 +6,8 @@
 #include <ocpp/common/charging_station_base.hpp>
 
 #include <ocpp/v201/database_handler.hpp>
-#include <ocpp/v201/device_model_management.hpp>
+#include <ocpp/v201/device_model.hpp>
+#include <ocpp/v201/ctrlr_component_vars.hpp>
 #include <ocpp/v201/enums.hpp>
 #include <ocpp/v201/evse.hpp>
 #include <ocpp/v201/ocpp_types.hpp>
@@ -49,7 +50,7 @@ private:
 
     // utility
     std::unique_ptr<MessageQueue<v201::MessageType>> message_queue;
-    std::shared_ptr<DeviceModelManager> device_model_manager;
+    std::unique_ptr<DeviceModel> device_model;
     std::unique_ptr<DatabaseHandler> database_handler;
 
     std::map<int32_t, ChangeAvailabilityRequest> scheduled_change_availability_requests;
