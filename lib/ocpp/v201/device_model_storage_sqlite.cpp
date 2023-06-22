@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2020 - 2023 Pionix GmbH and Contributors to EVerest
 
+#include <everest/logging.hpp>
 #include <ocpp/v201/device_model_storage_sqlite.hpp>
 
 namespace ocpp {
 
 namespace v201 {
 
-DeviceModelStorageSqlite::DeviceModelStorageSqlite(const std::filesystem::path& db_path) : db_path(db_path) {
+DeviceModelStorageSqlite::DeviceModelStorageSqlite(const std::filesystem::path& db_path) {
     if (sqlite3_open(db_path.c_str(), &this->db) != SQLITE_OK) {
         EVLOG_info << "Error opening database: " << sqlite3_errmsg(db);
         throw std::runtime_error("Could not open database at provided path.");
@@ -16,7 +17,7 @@ DeviceModelStorageSqlite::DeviceModelStorageSqlite(const std::filesystem::path& 
     }
 }
 
-std::map<Component, std::map<Variable, VariableMetaData>> DatabaseSqlite::get_device_model() {
+std::map<Component, std::map<Variable, VariableMetaData>> DeviceModelStorageSqlite::get_device_model() {
     std::map<Component, std::map<Variable, VariableMetaData>> device_model;
 
     std::string select_query = "SELECT c.COMPONENT_NAME, c.EVSE_ID, c.INSTANCE_ID, v.NAME, v.INSTANCE_ID, vc.DATATYPE, "
@@ -59,7 +60,7 @@ std::map<Component, std::map<Variable, VariableMetaData>> DatabaseSqlite::get_de
 
         VariableCharacteristics characteristics;
         characteristics.dataType =
-            string_to_data_enum(reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 5)));
+            conversions::string_to_data_enum(reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 5)));
         characteristics.supportsMonitoring = sqlite3_column_int(select_stmt, 6) != 0;
 
         if (sqlite3_column_type(select_stmt, 7) != SQLITE_NULL) {
@@ -90,7 +91,7 @@ std::map<Component, std::map<Variable, VariableMetaData>> DatabaseSqlite::get_de
     return device_model;
 }
 
-std::optional<VariableAttribute> DatabaseSqlite::get_variable_attribute(const Component& component,
+std::optional<VariableAttribute> DeviceModelStorageSqlite::get_variable_attribute(const Component& component,
                                                                         const Variable& variable,
                                                                         const AttributeEnum& attribute_enum) {
 
@@ -112,8 +113,8 @@ std::optional<VariableAttribute> DatabaseSqlite::get_variable_attribute(const Co
     }
 
     // Bind the parameters to the prepared statement
-    sqlite3_bind_text(select_stmt, 1, component.name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(select_stmt, 2, variable.name.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(select_stmt, 1, component.name.get().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(select_stmt, 2, variable.name.get().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_int(select_stmt, 3, static_cast<int>(1));
 
     // Execute the select query
@@ -135,16 +136,16 @@ std::optional<VariableAttribute> DatabaseSqlite::get_variable_attribute(const Co
     return result;
 }
 
-std::optional<std::string> DatabaseSqlite::get_value(const Component& component, const Variable& variable,
+std::optional<std::string> DeviceModelStorageSqlite::get_value(const Component& component, const Variable& variable,
                                                      const AttributeEnum& attribute_enum) {
     const auto attribute = this->get_variable_attribute(component, variable, attribute_enum);
     if (attribute.has_value()) {
-        return attribute.value().value;
+        return attribute.value().value.value().get();
     }
     return std::nullopt;
 }
 
-bool DatabaseSqlite::set_value(const Component& component, const Variable& variable,
+bool DeviceModelStorageSqlite::set_value(const Component& component, const Variable& variable,
                                const AttributeEnum& attribute_enum, const std::string& value) {
     const auto select_component_id_query = "SELECT ID FROM COMPONENT WHERE COMPONENT_NAME = ?";
     const auto select_variable_id_query = "SELECT ID FROM VARIABLE WHERE NAME = ?";
@@ -179,8 +180,8 @@ bool DatabaseSqlite::set_value(const Component& component, const Variable& varia
     }
 
     // Bind values to the select queries
-    sqlite3_bind_text(select_component_id_stmt, 1, component.name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(select_variable_id_stmt, 1, variable.name.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(select_component_id_stmt, 1, component.name.get().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(select_variable_id_stmt, 1, variable.name.get().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(select_attribute_type_id_stmt, 1, "Actual", -1, SQLITE_STATIC);
 
     // Execute the select queries

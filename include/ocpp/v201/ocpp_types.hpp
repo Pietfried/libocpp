@@ -314,6 +314,28 @@ struct Component {
     std::optional<CustomData> customData;
     std::optional<EVSE> evse;
     std::optional<CiString<50>> instance;
+
+    bool operator==(const Component& other) const {
+        return this->name.get() == other.name.get();
+    };
+
+    bool operator<(const Component& other) const {
+        if (this->name != other.name) {
+            return this->name.get() < other.name.get();
+        }
+
+        if (this->instance.has_value() != other.instance.has_value()) {
+            // Sort components without instance before those with instance
+            return !this->instance.has_value();
+        }
+
+        if (this->instance.has_value() && other.instance.has_value()) {
+            return this->instance.value().get() < other.instance.value().get();
+        }
+
+        // If names and instances are equal, components are considered equal
+        return false;
+    };
 };
 /// \brief Conversion from a given Component \p k to a given json object \p j
 void to_json(json& j, const Component& k);
@@ -329,6 +351,29 @@ struct Variable {
     CiString<50> name;
     std::optional<CustomData> customData;
     std::optional<CiString<50>> instance;
+
+    bool operator==(const Variable& other) const {
+        // variables are equal when they have an equal name and equal or no instance
+        return this->name.get() == other.name.get();
+    };
+
+    bool operator<(const Variable& other) const {
+        if (this->name != other.name) {
+            return this->name.get() < other.name.get();
+        }
+
+        if (this->instance.has_value() != other.instance.has_value()) {
+            // Sort components without instance before those with instance
+            return !this->instance.has_value();
+        }
+
+        if (this->instance.has_value() && other.instance.has_value()) {
+            return this->instance.value().get() < other.instance.value().get();
+        }
+
+        // If names and instances are equal, components are considered equal
+        return false;
+    };
 };
 /// \brief Conversion from a given Variable \p k to a given json object \p j
 void to_json(json& j, const Variable& k);

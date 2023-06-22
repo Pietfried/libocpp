@@ -8,7 +8,7 @@ namespace ocpp {
 namespace v201 {
 
 DeviceModel::DeviceModel() {
-    this->device_model_storage = std::make_unique<DatabaseSqlite>();
+    this->device_model_storage = std::make_unique<DeviceModelStorageSqlite>("/tmp/cp001.db"); //FIXME(piet)
     this->device_model = this->device_model_storage->get_device_model();
 };
 

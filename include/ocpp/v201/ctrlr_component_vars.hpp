@@ -10,168 +10,295 @@ namespace ocpp {
 namespace v201 {
 namespace ControllerComponentVariables {
 
-    const ComponentVariable AlignedDataCtrlrEnabled = {{"AlignedDataCtrlr"}, {"Enabled"}};
-    const ComponentVariable AlignedDataCtrlrAvailable = {{"AlignedDataCtrlr"}, {"Available"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataInterval = {{"AlignedDataCtrlr"}, {"AlignedDataInterval"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataMeasurands = {{"AlignedDataCtrlr"}, {"AlignedDataMeasurands"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataSendDuringIdle = {{"AlignedDataCtrlr"},
-                                                                         {"AlignedDataSendDuringIdle"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataSignReadings = {{"AlignedDataCtrlr"},
-                                                                       {"AlignedDataSignReadings"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataTxEndedInterval = {{"AlignedDataCtrlr"},
-                                                                          {"AlignedDataTxEndedInterval"}};
-    const ComponentVariable AlignedDataCtrlrAlignedDataTxEndedMeasurands = {{"AlignedDataCtrlr"},
-                                                                            {"AlignedDataTxEndedMeasurands"}};
-    const ComponentVariable AuthCacheCtrlrAvailable = {{"AuthCacheCtrlr"}, {"Available"}};
-    const ComponentVariable AuthCacheCtrlrEnabled = {{"AuthCacheCtrlr"}, {"Enabled"}};
-    const ComponentVariable AuthCacheCtrlrAuthCacheLifeTime = {{"AuthCacheCtrlr"}, {"AuthCacheLifeTime"}};
-    const ComponentVariable AuthCacheCtrlrAuthCachePolicy = {{"AuthCacheCtrlr"}, {"AuthCachePolicy"}};
-    const ComponentVariable AuthCacheCtrlrAuthCacheStorage = {{"AuthCacheCtrlr"}, {"AuthCacheStorage"}};
-    const ComponentVariable AuthCtrlrEnabled = {{"AuthCtrlr"}, {"Enabled"}};
-    const ComponentVariable AuthCtrlrAdditionalInfoItemsPerMessage = {{"AuthCtrlr"}, {"AdditionalInfoItemsPerMessage"}};
-    const ComponentVariable AuthCtrlrAuthorizeRemoteStart = {{"AuthCtrlr"}, {"AuthorizeRemoteStart"}};
-    const ComponentVariable AuthCtrlrLocalAuthorizeOffline = {{"AuthCtrlr"}, {"LocalAuthorizeOffline"}};
-    const ComponentVariable AuthCtrlrLocalPreAuthorize = {{"AuthCtrlr"}, {"LocalPreAuthorize"}};
-    const ComponentVariable AuthCtrlrMasterPassGroupId = {{"AuthCtrlr"}, {"MasterPassGroupId"}};
-    const ComponentVariable AuthCtrlrOfflineTxForUnknownIdEnabled = {{"AuthCtrlr"}, {"OfflineTxForUnknownIdEnabled"}};
-    const ComponentVariable ChargingStationAllowNewSessionsPendingFirmwareUpdate = {
-        {"ChargingStation"}, {"AllowNewSessionsPendingFirmwareUpdate"}};
-    const ComponentVariable ChargingStationAvailabilityState = {{"ChargingStation"}, {"AvailabilityState"}};
-    const ComponentVariable ChargingStationAvailable = {{"ChargingStation"}, {"Available"}};
-    const ComponentVariable ChargingStationSupplyPhases = {{"ChargingStation"}, {"SupplyPhases"}};
-    const ComponentVariable ClockCtrlrDateTime = {{"ClockCtrlr"}, {"DateTime"}};
-    const ComponentVariable ClockCtrlrNextTimeOffsetTransitionDateTime = {{"ClockCtrlr"},
-                                                                          {"NextTimeOffsetTransitionDateTime"}};
-    const ComponentVariable ClockCtrlrNtpServerUri = {{"ClockCtrlr"}, {"NtpServerUri"}};
-    const ComponentVariable ClockCtrlrNtpSource = {{"ClockCtrlr"}, {"NtpSource"}};
-    const ComponentVariable ClockCtrlrTimeAdjustmentReportingThreshold = {{"ClockCtrlr"},
-                                                                          {"TimeAdjustmentReportingThreshold"}};
-    const ComponentVariable ClockCtrlrTimeOffset = {{"ClockCtrlr"}, {"TimeOffset"}};
-    const ComponentVariable ClockCtrlrTimeOffset = {{"ClockCtrlr"}, {"TimeOffset"}};
-    const ComponentVariable ClockCtrlrTimeSource = {{"ClockCtrlr"}, {"TimeSource"}};
-    const ComponentVariable ClockCtrlrTimeZone = {{"ClockCtrlr"}, {"TimeZone"}};
-    const ComponentVariable ConnectorAvailable = {{"Connector"}, {"Available"}};
-    const ComponentVariable ConnectorConnectorType = {{"Connector"}, {"ConnectorType"}};
-    const ComponentVariable ConnectorSupplyPhases = {{"Connector"}, {"SupplyPhases"}};
-    const ComponentVariable CustomizationCtrlrCustomImplementationEnabled = {{"CustomizationCtrlr"},
-                                                                             {"CustomImplementationEnabled"}};
-    const ComponentVariable DeviceDataCtrlrBytesPerMessage = {{"DeviceDataCtrlr"}, {"BytesPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrBytesPerMessage = {{"DeviceDataCtrlr"}, {"BytesPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrBytesPerMessage = {{"DeviceDataCtrlr"}, {"BytesPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrConfigurationValueSize = {{"DeviceDataCtrlr"}, {"ConfigurationValueSize"}};
-    const ComponentVariable DeviceDataCtrlrItemsPerMessage = {{"DeviceDataCtrlr"}, {"ItemsPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrItemsPerMessage = {{"DeviceDataCtrlr"}, {"ItemsPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrItemsPerMessage = {{"DeviceDataCtrlr"}, {"ItemsPerMessage"}};
-    const ComponentVariable DeviceDataCtrlrReportingValueSize = {{"DeviceDataCtrlr"}, {"ReportingValueSize"}};
-    const ComponentVariable DisplayMessageCtrlrAvailable = {{"DisplayMessageCtrlr"}, {"Available"}};
-    const ComponentVariable DisplayMessageCtrlrNumberOfDisplayMessages = {{"DisplayMessageCtrlr"},
-                                                                          {"NumberOfDisplayMessages"}};
-    const ComponentVariable DisplayMessageCtrlrDisplayMessageSupportedFormats = {{"DisplayMessageCtrlr"},
-                                                                                 {"DisplayMessageSupportedFormats"}};
-    const ComponentVariable DisplayMessageCtrlrDisplayMessageSupportedPriorities = {
-        {"DisplayMessageCtrlr"}, {"DisplayMessageSupportedPriorities"}};
-    const ComponentVariable EVSEAllowReset = {{"EVSE"}, {"AllowReset"}};
-    const ComponentVariable EVSEAvailable = {{"EVSE"}, {"Available"}};
-    const ComponentVariable EVSEPower = {{"EVSE"}, {"Power"}};
-    const ComponentVariable EVSESupplyPhases = {{"EVSE"}, {"SupplyPhases"}};
-    const ComponentVariable ISO15118CtrlrCentralContractValidationAllowed = {{"ISO15118Ctrlr"},
-                                                                             {"CentralContractValidationAllowed"}};
-    const ComponentVariable ISO15118CtrlrContractValidationOffline = {{"ISO15118Ctrlr"}, {"ContractValidationOffline"}};
-    const ComponentVariable ISO15118CtrlrRequestMeteringReceipt = {{"ISO15118Ctrlr"}, {"RequestMeteringReceipt"}};
-    const ComponentVariable ISO15118CtrlrCountryName = {{"ISO15118Ctrlr"}, {"CountryName"}};
-    const ComponentVariable ISO15118CtrlrOrganizationName = {{"ISO15118Ctrlr"}, {"OrganizationName"}};
-    const ComponentVariable ISO15118CtrlrPnCEnabled = {{"ISO15118Ctrlr"}, {"PnCEnabled"}};
-    const ComponentVariable ISO15118CtrlrV2GCertificateInstallationEnabled = {{"ISO15118Ctrlr"},
-                                                                              {"V2GCertificateInstallationEnabled"}};
-    const ComponentVariable ISO15118CtrlrContractCertificateInstallationEnabled = {
-        {"ISO15118Ctrlr"}, {"ContractCertificateInstallationEnabled"}};
-    const ComponentVariable LocalAuthListCtrlrAvailable = {{"LocalAuthListCtrlr"}, {"Available"}};
-    const ComponentVariable LocalAuthListCtrlrBytesPerMessageSendLocalList = {{"LocalAuthListCtrlr"},
-                                                                              {"BytesPerMessageSendLocalList"}};
-    const ComponentVariable LocalAuthListCtrlrEnabled = {{"LocalAuthListCtrlr"}, {"Enabled"}};
-    const ComponentVariable LocalAuthListCtrlrEntries = {{"LocalAuthListCtrlr"}, {"Entries"}};
-    const ComponentVariable LocalAuthListCtrlrItemsPerMessageSendLocalList = {{"LocalAuthListCtrlr"},
-                                                                              {"ItemsPerMessageSendLocalList"}};
-    const ComponentVariable LocalAuthListCtrlrStorage = {{"LocalAuthListCtrlr"}, {"Storage"}};
-    const ComponentVariable MonitoringCtrlrAvailable = {{"MonitoringCtrlr"}, {"Available"}};
-    const ComponentVariable MonitoringCtrlrBytesPerMessage = {{"MonitoringCtrlr"}, {"BytesPerMessage"}};
-    const ComponentVariable MonitoringCtrlrBytesPerMessage = {{"MonitoringCtrlr"}, {"BytesPerMessage"}};
-    const ComponentVariable MonitoringCtrlrEnabled = {{"MonitoringCtrlr"}, {"Enabled"}};
-    const ComponentVariable MonitoringCtrlrItemsPerMessage = {{"MonitoringCtrlr"}, {"ItemsPerMessage"}};
-    const ComponentVariable MonitoringCtrlrItemsPerMessage = {{"MonitoringCtrlr"}, {"ItemsPerMessage"}};
-    const ComponentVariable MonitoringCtrlrOfflineQueuingSeverity = {{"MonitoringCtrlr"}, {"OfflineQueuingSeverity"}};
-    const ComponentVariable OCPPCommCtrlrActiveNetworkProfile = {{"OCPPCommCtrlr"}, {"ActiveNetworkProfile"}};
-    const ComponentVariable OCPPCommCtrlrFileTransferProtocols = {{"OCPPCommCtrlr"}, {"FileTransferProtocols"}};
-    const ComponentVariable OCPPCommCtrlrHeartbeatInterval = {{"OCPPCommCtrlr"}, {"HeartbeatInterval"}};
-    const ComponentVariable OCPPCommCtrlrMessageTimeout = {{"OCPPCommCtrlr"}, {"MessageTimeout"}};
-    const ComponentVariable OCPPCommCtrlrMessageAttemptInterval = {{"OCPPCommCtrlr"}, {"MessageAttemptInterval"}};
-    const ComponentVariable OCPPCommCtrlrMessageAttempts = {{"OCPPCommCtrlr"}, {"MessageAttempts"}};
-    const ComponentVariable OCPPCommCtrlrNetworkConfigurationPriority = {{"OCPPCommCtrlr"},
-                                                                         {"NetworkConfigurationPriority"}};
-    const ComponentVariable OCPPCommCtrlrNetworkProfileConnectionAttempts = {{"OCPPCommCtrlr"},
-                                                                             {"NetworkProfileConnectionAttempts"}};
-    const ComponentVariable OCPPCommCtrlrOfflineThreshold = {{"OCPPCommCtrlr"}, {"OfflineThreshold"}};
-    const ComponentVariable OCPPCommCtrlrQueueAllMessages = {{"OCPPCommCtrlr"}, {"QueueAllMessages"}};
-    const ComponentVariable OCPPCommCtrlrResetRetries = {{"OCPPCommCtrlr"}, {"ResetRetries"}};
-    const ComponentVariable OCPPCommCtrlrUnlockOnEVSideDisconnect = {{"OCPPCommCtrlr"}, {"UnlockOnEVSideDisconnect"}};
-    const ComponentVariable OCPPCommCtrlrWebSocketPingInterval = {{"OCPPCommCtrlr"}, {"WebSocketPingInterval"}};
-    const ComponentVariable ReservationCtrlrAvailable = {{"ReservationCtrlr"}, {"Available"}};
-    const ComponentVariable ReservationCtrlrEnabled = {{"ReservationCtrlr"}, {"Enabled"}};
-    const ComponentVariable ReservationCtrlrNonEvseSpecific = {{"ReservationCtrlr"}, {"NonEvseSpecific"}};
-    const ComponentVariable SampledDataCtrlrAvailable = {{"SampledDataCtrlr"}, {"Available"}};
-    const ComponentVariable SampledDataCtrlrEnabled = {{"SampledDataCtrlr"}, {"Enabled"}};
-    const ComponentVariable SampledDataCtrlrSampledDataSignReadings = {{"SampledDataCtrlr"},
-                                                                       {"SampledDataSignReadings"}};
-    const ComponentVariable SampledDataCtrlrSampledDataTxEndedInterval = {{"SampledDataCtrlr"},
-                                                                          {"SampledDataTxEndedInterval"}};
-    const ComponentVariable SampledDataCtrlrSampledDataTxEndedMeasurands = {{"SampledDataCtrlr"},
-                                                                            {"SampledDataTxEndedMeasurands"}};
-    const ComponentVariable SampledDataCtrlrSampledDataTxStartedMeasurands = {{"SampledDataCtrlr"},
-                                                                              {"SampledDataTxStartedMeasurands"}};
-    const ComponentVariable SampledDataCtrlrSampledDataTxUpdatedInterval = {{"SampledDataCtrlr"},
-                                                                            {"SampledDataTxUpdatedInterval"}};
-    const ComponentVariable SampledDataCtrlrSampledDataTxUpdatedMeasurands = {{"SampledDataCtrlr"},
-                                                                              {"SampledDataTxUpdatedMeasurands"}};
-    const ComponentVariable SecurityCtrlrAdditionalRootCertificateCheck = {{"SecurityCtrlr"},
-                                                                           {"AdditionalRootCertificateCheck"}};
-    const ComponentVariable SecurityCtrlrBasicAuthPassword = {{"SecurityCtrlr"}, {"BasicAuthPassword"}};
-    const ComponentVariable SecurityCtrlrCertificateEntries = {{"SecurityCtrlr"}, {"CertificateEntries"}};
-    const ComponentVariable SecurityCtrlrIdentity = {{"SecurityCtrlr"}, {"Identity"}};
-    const ComponentVariable SecurityCtrlrMaxCertificateChainSize = {{"SecurityCtrlr"}, {"MaxCertificateChainSize"}};
-    const ComponentVariable SecurityCtrlrOrganizationName = {{"SecurityCtrlr"}, {"OrganizationName"}};
-    const ComponentVariable SecurityCtrlrSecurityProfile = {{"SecurityCtrlr"}, {"SecurityProfile"}};
-    const ComponentVariable SmartChargingCtrlrACPhaseSwitchingSupported = {{"SmartChargingCtrlr"},
-                                                                           {"ACPhaseSwitchingSupported"}};
-    const ComponentVariable SmartChargingCtrlrAvailable = {{"SmartChargingCtrlr"}, {"Available"}};
-    const ComponentVariable SmartChargingCtrlrEnabled = {{"SmartChargingCtrlr"}, {"Enabled"}};
-    const ComponentVariable SmartChargingCtrlrEntries = {{"SmartChargingCtrlr"}, {"Entries"}};
-    const ComponentVariable SmartChargingCtrlrExternalControlSignalsEnabled = {{"SmartChargingCtrlr"},
-                                                                               {"ExternalControlSignalsEnabled"}};
-    const ComponentVariable SmartChargingCtrlrLimitChangeSignificance = {{"SmartChargingCtrlr"},
-                                                                         {"LimitChangeSignificance"}};
-    const ComponentVariable SmartChargingCtrlrNotifyChargingLimitWithSchedules = {{"SmartChargingCtrlr"},
-                                                                                  {"NotifyChargingLimitWithSchedules"}};
-    const ComponentVariable SmartChargingCtrlrPeriodsPerSchedule = {{"SmartChargingCtrlr"}, {"PeriodsPerSchedule"}};
-    const ComponentVariable SmartChargingCtrlrPhases3to1 = {{"SmartChargingCtrlr"}, {"Phases3to1"}};
-    const ComponentVariable SmartChargingCtrlrChargingProfileMaxStackLevel = {{"SmartChargingCtrlr"},
-                                                                              {"ChargingProfileMaxStackLevel"}};
-    const ComponentVariable SmartChargingCtrlrChargingScheduleChargingRateUnit = {{"SmartChargingCtrlr"},
-                                                                                  {"ChargingScheduleChargingRateUnit"}};
-    const ComponentVariable TariffCostCtrlrAvailable = {{"TariffCostCtrlr"}, {"Available"}};
-    const ComponentVariable TariffCostCtrlrAvailable = {{"TariffCostCtrlr"}, {"Available"}};
-    const ComponentVariable TariffCostCtrlrCurrency = {{"TariffCostCtrlr"}, {"Currency"}};
-    const ComponentVariable TariffCostCtrlrEnabled = {{"TariffCostCtrlr"}, {"Enabled"}};
-    const ComponentVariable TariffCostCtrlrEnabled = {{"TariffCostCtrlr"}, {"Enabled"}};
-    const ComponentVariable TariffCostCtrlrTariffFallbackMessage = {{"TariffCostCtrlr"}, {"TariffFallbackMessage"}};
-    const ComponentVariable TariffCostCtrlrTotalCostFallbackMessage = {{"TariffCostCtrlr"},
-                                                                       {"TotalCostFallbackMessage"}};
-    const ComponentVariable TxCtrlrEVConnectionTimeOut = {{"TxCtrlr"}, {"EVConnectionTimeOut"}};
-    const ComponentVariable TxCtrlrMaxEnergyOnInvalidId = {{"TxCtrlr"}, {"MaxEnergyOnInvalidId"}};
-    const ComponentVariable TxCtrlrStopTxOnEVSideDisconnect = {{"TxCtrlr"}, {"StopTxOnEVSideDisconnect"}};
-    const ComponentVariable TxCtrlrStopTxOnInvalidId = {{"TxCtrlr"}, {"StopTxOnInvalidId"}};
-    const ComponentVariable TxCtrlrTxBeforeAcceptedEnabled = {{"TxCtrlr"}, {"TxBeforeAcceptedEnabled"}};
-    const ComponentVariable TxCtrlrTxStartPoint = {{"TxCtrlr"}, {"TxStartPoint"}};
-    const ComponentVariable TxCtrlrTxStopPoint = {{"TxCtrlr"}, {"TxStopPoint"}};
+const ComponentVariable InternalCtrlrEnabled = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"InternalCtrlrEnabled"})};
+const ComponentVariable ChargePointId = {{"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ChargePointId"})};
+const ComponentVariable CentralSystemURI = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"CentralSystemURI"})};
+const ComponentVariable ChargeBoxSerialNumber = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ChargeBoxSerialNumber"})};
+const ComponentVariable ChargePointModel = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ChargePointModel"})};
+const ComponentVariable ChargePointSerialNumber = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ChargePointSerialNumber"})};
+const ComponentVariable ChargePointVendor = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ChargePointVendor"})};
+const ComponentVariable FirmwareVersion = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"FirmwareVersion"})};
+const ComponentVariable ICCID = {{"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"ICCID"})};
+const ComponentVariable IMSI = {{"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"IMSI"})};
+const ComponentVariable MeterSerialNumber = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"MeterSerialNumber"})};
+const ComponentVariable MeterType = {{"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"MeterType"})};
+const ComponentVariable SupportedCiphers12 = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"SupportedCiphers12"})};
+const ComponentVariable SupportedCiphers13 = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"SupportedCiphers13"})};
+const ComponentVariable WebsocketReconnectInterval = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"WebsocketReconnectInterval"})};
+const ComponentVariable AuthorizeConnectorZeroOnConnectorOne = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"AuthorizeConnectorZeroOnConnectorOne"})};
+const ComponentVariable LogMessages = {{"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"LogMessages"})};
+const ComponentVariable LogMessagesFormat = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"LogMessagesFormat"})};
+const ComponentVariable SupportedChargingProfilePurposeTypes = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"SupportedChargingProfilePurposeTypes"})};
+const ComponentVariable MaxCompositeScheduleDuration = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"MaxCompositeScheduleDuration"})};
+const ComponentVariable NumberOfConnectors = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"NumberOfConnectors"})};
+const ComponentVariable UseSslDefaultVerifyPaths = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"UseSslDefaultVerifyPaths"})};
+const ComponentVariable OcspRequestInterval = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"OcspRequestInterval"})};
+const ComponentVariable WebsocketPingPayload = {
+    {"InternalCtrlr"}, std::nullopt, std::optional<Variable>({"WebsocketPingPayload"})};
+const ComponentVariable AlignedDataCtrlrEnabled = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataCtrlrEnabled"})};
+const ComponentVariable AlignedDataCtrlrAvailable = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataCtrlrAvailable"})};
+const ComponentVariable AlignedDataInterval = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataInterval"})};
+const ComponentVariable AlignedDataMeasurands = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataMeasurands"})};
+const ComponentVariable AlignedDataSendDuringIdle = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataSendDuringIdle"})};
+const ComponentVariable AlignedDataSignReadings = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataSignReadings"})};
+const ComponentVariable AlignedDataTxEndedInterval = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataTxEndedInterval"})};
+const ComponentVariable AlignedDataTxEndedMeasurands = {
+    {"AlignedDataCtrlr"}, std::nullopt, std::optional<Variable>({"AlignedDataTxEndedMeasurands"})};
+const ComponentVariable AuthCacheCtrlrAvailable = {
+    {"AuthCacheCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCacheCtrlrAvailable"})};
+const ComponentVariable AuthCacheCtrlrEnabled = {
+    {"AuthCacheCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCacheCtrlrEnabled"})};
+const ComponentVariable AuthCacheLifeTime = {
+    {"AuthCacheCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCacheLifeTime"})};
+const ComponentVariable AuthCachePolicy = {
+    {"AuthCacheCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCachePolicy"})};
+const ComponentVariable AuthCacheStorage = {
+    {"AuthCacheCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCacheStorage"})};
+const ComponentVariable AuthCtrlrEnabled = {{"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"AuthCtrlrEnabled"})};
+const ComponentVariable AdditionalInfoItemsPerMessage = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"AdditionalInfoItemsPerMessage"})};
+const ComponentVariable AuthorizeRemoteStart = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"AuthorizeRemoteStart"})};
+const ComponentVariable LocalAuthorizeOffline = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"LocalAuthorizeOffline"})};
+const ComponentVariable LocalPreAuthorize = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"LocalPreAuthorize"})};
+const ComponentVariable MasterPassGroupId = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"MasterPassGroupId"})};
+const ComponentVariable OfflineTxForUnknownIdEnabled = {
+    {"AuthCtrlr"}, std::nullopt, std::optional<Variable>({"OfflineTxForUnknownIdEnabled"})};
+const ComponentVariable AllowNewSessionsPendingFirmwareUpdate = {
+    {"ChargingStation"}, std::nullopt, std::optional<Variable>({"AllowNewSessionsPendingFirmwareUpdate"})};
+const ComponentVariable ChargingStationAvailabilityState = {
+    {"ChargingStation"}, std::nullopt, std::optional<Variable>({"ChargingStationAvailabilityState"})};
+const ComponentVariable ChargingStationAvailable = {
+    {"ChargingStation"}, std::nullopt, std::optional<Variable>({"ChargingStationAvailable"})};
+const ComponentVariable ChargingStationSupplyPhases = {
+    {"ChargingStation"}, std::nullopt, std::optional<Variable>({"ChargingStationSupplyPhases"})};
+const ComponentVariable DateTime = {{"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"DateTime"})};
+const ComponentVariable NextTimeOffsetTransitionDateTime = {
+    {"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"NextTimeOffsetTransitionDateTime"})};
+const ComponentVariable NtpServerUri = {{"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"NtpServerUri"})};
+const ComponentVariable NtpSource = {{"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"NtpSource"})};
+const ComponentVariable TimeAdjustmentReportingThreshold = {
+    {"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"TimeAdjustmentReportingThreshold"})};
+const ComponentVariable ClockCtrlrTimeOffset = {
+    {"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"ClockCtrlrTimeOffset"})};
+const ComponentVariable ClockCtrlrTimeOffsetNextTransition = {
+    {"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"ClockCtrlrTimeOffsetNextTransition"})};
+const ComponentVariable TimeSource = {{"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"TimeSource"})};
+const ComponentVariable TimeZone = {{"ClockCtrlr"}, std::nullopt, std::optional<Variable>({"TimeZone"})};
+const ComponentVariable ConnectorAvailable = {
+    {"Connector"}, std::nullopt, std::optional<Variable>({"ConnectorAvailable"})};
+const ComponentVariable ConnectorType = {{"Connector"}, std::nullopt, std::optional<Variable>({"ConnectorType"})};
+const ComponentVariable ConnectorSupplyPhases = {
+    {"Connector"}, std::nullopt, std::optional<Variable>({"ConnectorSupplyPhases"})};
+const ComponentVariable CustomImplementationEnabled = {
+    {"CustomizationCtrlr"}, std::nullopt, std::optional<Variable>({"CustomImplementationEnabled"})};
+const ComponentVariable DeviceDataCtrlrBytesPerMessageGetReport = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrBytesPerMessageGetReport"})};
+const ComponentVariable DeviceDataCtrlrBytesPerMessageGetVariables = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrBytesPerMessageGetVariables"})};
+const ComponentVariable DeviceDataCtrlrBytesPerMessageSetVariables = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrBytesPerMessageSetVariables"})};
+const ComponentVariable ConfigurationValueSize = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"ConfigurationValueSize"})};
+const ComponentVariable DeviceDataCtrlrItemsPerMessageGetReport = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrItemsPerMessageGetReport"})};
+const ComponentVariable DeviceDataCtrlrItemsPerMessageGetVariables = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrItemsPerMessageGetVariables"})};
+const ComponentVariable DeviceDataCtrlrItemsPerMessageSetVariables = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"DeviceDataCtrlrItemsPerMessageSetVariables"})};
+const ComponentVariable ReportingValueSize = {
+    {"DeviceDataCtrlr"}, std::nullopt, std::optional<Variable>({"ReportingValueSize"})};
+const ComponentVariable DisplayMessageCtrlrAvailable = {
+    {"DisplayMessageCtrlr"}, std::nullopt, std::optional<Variable>({"DisplayMessageCtrlrAvailable"})};
+const ComponentVariable NumberOfDisplayMessages = {
+    {"DisplayMessageCtrlr"}, std::nullopt, std::optional<Variable>({"NumberOfDisplayMessages"})};
+const ComponentVariable DisplayMessageSupportedFormats = {
+    {"DisplayMessageCtrlr"}, std::nullopt, std::optional<Variable>({"DisplayMessageSupportedFormats"})};
+const ComponentVariable DisplayMessageSupportedPriorities = {
+    {"DisplayMessageCtrlr"}, std::nullopt, std::optional<Variable>({"DisplayMessageSupportedPriorities"})};
+const ComponentVariable AllowReset = {{"EVSE"}, std::nullopt, std::optional<Variable>({"AllowReset"})};
+const ComponentVariable EVSEAvailable = {{"EVSE"}, std::nullopt, std::optional<Variable>({"EVSEAvailable"})};
+const ComponentVariable Power = {{"EVSE"}, std::nullopt, std::optional<Variable>({"Power"})};
+const ComponentVariable EVSESupplyPhases = {{"EVSE"}, std::nullopt, std::optional<Variable>({"EVSESupplyPhases"})};
+const ComponentVariable CentralContractValidationAllowed = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"CentralContractValidationAllowed"})};
+const ComponentVariable ContractValidationOffline = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"ContractValidationOffline"})};
+const ComponentVariable RequestMeteringReceipt = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"RequestMeteringReceipt"})};
+const ComponentVariable CountryName = {{"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"CountryName"})};
+const ComponentVariable ISO15118CtrlrOrganizationName = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"ISO15118CtrlrOrganizationName"})};
+const ComponentVariable PnCEnabled = {{"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"PnCEnabled"})};
+const ComponentVariable V2GCertificateInstallationEnabled = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"V2GCertificateInstallationEnabled"})};
+const ComponentVariable ContractCertificateInstallationEnabled = {
+    {"ISO15118Ctrlr"}, std::nullopt, std::optional<Variable>({"ContractCertificateInstallationEnabled"})};
+const ComponentVariable LocalAuthListCtrlrAvailable = {
+    {"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"LocalAuthListCtrlrAvailable"})};
+const ComponentVariable BytesPerMessageSendLocalList = {
+    {"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"BytesPerMessageSendLocalList"})};
+const ComponentVariable LocalAuthListCtrlrEnabled = {
+    {"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"LocalAuthListCtrlrEnabled"})};
+const ComponentVariable LocalAuthListCtrlrEntries = {
+    {"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"LocalAuthListCtrlrEntries"})};
+const ComponentVariable ItemsPerMessageSendLocalList = {
+    {"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"ItemsPerMessageSendLocalList"})};
+const ComponentVariable Storage = {{"LocalAuthListCtrlr"}, std::nullopt, std::optional<Variable>({"Storage"})};
+const ComponentVariable MonitoringCtrlrAvailable = {
+    {"MonitoringCtrlr"}, std::nullopt, std::optional<Variable>({"MonitoringCtrlrAvailable"})};
+const ComponentVariable MonitoringCtrlrBytesPerMessageClearVariableMonitoring = {
+    {"MonitoringCtrlr"},
+    std::nullopt,
+    std::optional<Variable>({"MonitoringCtrlrBytesPerMessageClearVariableMonitoring"})};
+const ComponentVariable MonitoringCtrlrBytesPerMessageSetVariableMonitoring = {
+    {"MonitoringCtrlr"},
+    std::nullopt,
+    std::optional<Variable>({"MonitoringCtrlrBytesPerMessageSetVariableMonitoring"})};
+const ComponentVariable MonitoringCtrlrEnabled = {
+    {"MonitoringCtrlr"}, std::nullopt, std::optional<Variable>({"MonitoringCtrlrEnabled"})};
+const ComponentVariable MonitoringCtrlrItemsPerMessageClearVariableMonitoring = {
+    {"MonitoringCtrlr"},
+    std::nullopt,
+    std::optional<Variable>({"MonitoringCtrlrItemsPerMessageClearVariableMonitoring"})};
+const ComponentVariable MonitoringCtrlrItemsPerMessageSetVariableMonitoring = {
+    {"MonitoringCtrlr"},
+    std::nullopt,
+    std::optional<Variable>({"MonitoringCtrlrItemsPerMessageSetVariableMonitoring"})};
+const ComponentVariable OfflineQueuingSeverity = {
+    {"MonitoringCtrlr"}, std::nullopt, std::optional<Variable>({"OfflineQueuingSeverity"})};
+const ComponentVariable ActiveNetworkProfile = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"ActiveNetworkProfile"})};
+const ComponentVariable FileTransferProtocols = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"FileTransferProtocols"})};
+const ComponentVariable HeartbeatInterval = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"HeartbeatInterval"})};
+const ComponentVariable MessageTimeout = {{"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"MessageTimeout"})};
+const ComponentVariable MessageAttemptInterval = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"MessageAttemptInterval"})};
+const ComponentVariable MessageAttempts = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"MessageAttempts"})};
+const ComponentVariable NetworkConfigurationPriority = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"NetworkConfigurationPriority"})};
+const ComponentVariable NetworkProfileConnectionAttempts = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"NetworkProfileConnectionAttempts"})};
+const ComponentVariable OfflineThreshold = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"OfflineThreshold"})};
+const ComponentVariable QueueAllMessages = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"QueueAllMessages"})};
+const ComponentVariable ResetRetries = {{"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"ResetRetries"})};
+const ComponentVariable UnlockOnEVSideDisconnect = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"UnlockOnEVSideDisconnect"})};
+const ComponentVariable WebSocketPingInterval = {
+    {"OCPPCommCtrlr"}, std::nullopt, std::optional<Variable>({"WebSocketPingInterval"})};
+const ComponentVariable ReservationCtrlrAvailable = {
+    {"ReservationCtrlr"}, std::nullopt, std::optional<Variable>({"ReservationCtrlrAvailable"})};
+const ComponentVariable ReservationCtrlrEnabled = {
+    {"ReservationCtrlr"}, std::nullopt, std::optional<Variable>({"ReservationCtrlrEnabled"})};
+const ComponentVariable NonEvseSpecific = {
+    {"ReservationCtrlr"}, std::nullopt, std::optional<Variable>({"NonEvseSpecific"})};
+const ComponentVariable SampledDataCtrlrAvailable = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataCtrlrAvailable"})};
+const ComponentVariable SampledDataCtrlrEnabled = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataCtrlrEnabled"})};
+const ComponentVariable SampledDataSignReadings = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataSignReadings"})};
+const ComponentVariable SampledDataTxEndedInterval = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataTxEndedInterval"})};
+const ComponentVariable SampledDataTxEndedMeasurands = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataTxEndedMeasurands"})};
+const ComponentVariable SampledDataTxStartedMeasurands = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataTxStartedMeasurands"})};
+const ComponentVariable SampledDataTxUpdatedInterval = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataTxUpdatedInterval"})};
+const ComponentVariable SampledDataTxUpdatedMeasurands = {
+    {"SampledDataCtrlr"}, std::nullopt, std::optional<Variable>({"SampledDataTxUpdatedMeasurands"})};
+const ComponentVariable AdditionalRootCertificateCheck = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"AdditionalRootCertificateCheck"})};
+const ComponentVariable BasicAuthPassword = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"BasicAuthPassword"})};
+const ComponentVariable CertificateEntries = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"CertificateEntries"})};
+const ComponentVariable Identity = {{"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"Identity"})};
+const ComponentVariable MaxCertificateChainSize = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"MaxCertificateChainSize"})};
+const ComponentVariable SecurityCtrlrOrganizationName = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"SecurityCtrlrOrganizationName"})};
+const ComponentVariable SecurityProfile = {
+    {"SecurityCtrlr"}, std::nullopt, std::optional<Variable>({"SecurityProfile"})};
+const ComponentVariable ACPhaseSwitchingSupported = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"ACPhaseSwitchingSupported"})};
+const ComponentVariable SmartChargingCtrlrAvailable = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"SmartChargingCtrlrAvailable"})};
+const ComponentVariable SmartChargingCtrlrEnabled = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"SmartChargingCtrlrEnabled"})};
+const ComponentVariable SmartChargingCtrlrEntriesChargingProfiles = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"SmartChargingCtrlrEntriesChargingProfiles"})};
+const ComponentVariable ExternalControlSignalsEnabled = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"ExternalControlSignalsEnabled"})};
+const ComponentVariable LimitChangeSignificance = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"LimitChangeSignificance"})};
+const ComponentVariable NotifyChargingLimitWithSchedules = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"NotifyChargingLimitWithSchedules"})};
+const ComponentVariable PeriodsPerSchedule = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"PeriodsPerSchedule"})};
+const ComponentVariable Phases3to1 = {{"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"Phases3to1"})};
+const ComponentVariable ChargingProfileMaxStackLevel = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"ChargingProfileMaxStackLevel"})};
+const ComponentVariable ChargingScheduleChargingRateUnit = {
+    {"SmartChargingCtrlr"}, std::nullopt, std::optional<Variable>({"ChargingScheduleChargingRateUnit"})};
+const ComponentVariable TariffCostCtrlrAvailableTariff = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TariffCostCtrlrAvailableTariff"})};
+const ComponentVariable TariffCostCtrlrAvailableCost = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TariffCostCtrlrAvailableCost"})};
+const ComponentVariable Currency = {{"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"Currency"})};
+const ComponentVariable TariffCostCtrlrEnabledTariff = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TariffCostCtrlrEnabledTariff"})};
+const ComponentVariable TariffCostCtrlrEnabledCost = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TariffCostCtrlrEnabledCost"})};
+const ComponentVariable TariffFallbackMessage = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TariffFallbackMessage"})};
+const ComponentVariable TotalCostFallbackMessage = {
+    {"TariffCostCtrlr"}, std::nullopt, std::optional<Variable>({"TotalCostFallbackMessage"})};
+const ComponentVariable EVConnectionTimeOut = {
+    {"TxCtrlr"}, std::nullopt, std::optional<Variable>({"EVConnectionTimeOut"})};
+const ComponentVariable MaxEnergyOnInvalidId = {
+    {"TxCtrlr"}, std::nullopt, std::optional<Variable>({"MaxEnergyOnInvalidId"})};
+const ComponentVariable StopTxOnEVSideDisconnect = {
+    {"TxCtrlr"}, std::nullopt, std::optional<Variable>({"StopTxOnEVSideDisconnect"})};
+const ComponentVariable StopTxOnInvalidId = {{"TxCtrlr"}, std::nullopt, std::optional<Variable>({"StopTxOnInvalidId"})};
+const ComponentVariable TxBeforeAcceptedEnabled = {
+    {"TxCtrlr"}, std::nullopt, std::optional<Variable>({"TxBeforeAcceptedEnabled"})};
+const ComponentVariable TxStartPoint = {{"TxCtrlr"}, std::nullopt, std::optional<Variable>({"TxStartPoint"})};
+const ComponentVariable TxStopPoint = {{"TxCtrlr"}, std::nullopt, std::optional<Variable>({"TxStopPoint"})};
 
 } // namespace ControllerComponentVariables
 } // namespace v201

@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <map>
 #include <memory>
+#include <optional>
 #include <ocpp/v201/ocpp_types.hpp>
 
 namespace ocpp {
