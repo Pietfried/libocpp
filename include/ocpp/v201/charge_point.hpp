@@ -7,7 +7,6 @@
 
 #include <ocpp/v201/database_handler.hpp>
 #include <ocpp/v201/device_model.hpp>
-#include <ocpp/v201/ctrlr_component_vars.hpp>
 #include <ocpp/v201/enums.hpp>
 #include <ocpp/v201/evse.hpp>
 #include <ocpp/v201/ocpp_types.hpp>

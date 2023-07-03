@@ -40,7 +40,7 @@ ChargePoint::ChargePoint(const std::map<int32_t, int32_t>& evse_connector_struct
                                                        const int32_t seq_no,
                                                        const std::optional<int32_t> reservation_id) {
             const auto filtered_meter_value = utils::get_meter_value_with_measurands_applied(
-                _meter_value, utils::get_measurands_vec(this->device_model->get_value<std::string>(
+                _meter_value, utils::get_measurands_vec(this->device_model->get_variable_attribute_value<std::string>(
                                   ControllerComponentVariables::SampledDataTxUpdatedMeasurands)));
             this->transaction_event_req(TransactionEventEnum::Updated, DateTime(), transaction,
                                         TriggerReasonEnum::MeterValuePeriodic, seq_no, std::nullopt, std::nullopt,
@@ -60,15 +60,16 @@ ChargePoint::ChargePoint(const std::map<int32_t, int32_t>& evse_connector_struct
                                                            false, false, true, true);
     this->message_queue = std::make_unique<ocpp::MessageQueue<v201::MessageType>>(
         [this](json message) -> bool { return this->websocket->send(message.dump()); },
-
-        this->device_model->get_value<int>(ControllerComponentVariables::MessageAttempts),
-        this->device_model->get_value<int>(ControllerComponentVariables::MessageAttemptInterval));
+        this->device_model->get_variable_attribute_value<int>(
+            ControllerComponentVariables::MessageAttemptsTransactionEvent),
+        this->device_model->get_variable_attribute_value<int>(
+            ControllerComponentVariables::MessageAttemptIntervalTransactionEvent));
 }
 
 void ChargePoint::start() {
     this->init_websocket();
     this->websocket->connect(
-        this->device_model->get_value<int>(ControllerComponentVariables::SecurityProfile));
+        this->device_model->get_variable_attribute_value<int>(ControllerComponentVariables::SecurityProfile));
     this->boot_notification_req(BootReasonEnum::PowerUp);
     // FIXME(piet): Run state machine with correct initial state
 }
@@ -89,12 +90,13 @@ void ChargePoint::on_transaction_started(const int32_t evse_id, const int32_t co
                                          const MeterValue& meter_start, const IdToken& id_token,
                                          const std::optional<int32_t>& reservation_id) {
 
-    this->evses.at(evse_id)->open_transaction(
-        session_id, connector_id, timestamp, meter_start, id_token, reservation_id,
-        this->device_model->get_value<int>(ControllerComponentVariables::SampledDataTxUpdatedInterval));
+    this->evses.at(evse_id)->open_transaction(session_id, connector_id, timestamp, meter_start, id_token,
+                                              reservation_id,
+                                              this->device_model->get_variable_attribute_value<int>(
+                                                  ControllerComponentVariables::SampledDataTxUpdatedInterval));
     const auto& enhanced_transaction = this->evses.at(evse_id)->get_transaction();
     const auto meter_value = utils::get_meter_value_with_measurands_applied(
-        meter_start, utils::get_measurands_vec(this->device_model->get_value<std::string>(
+        meter_start, utils::get_measurands_vec(this->device_model->get_variable_attribute_value<std::string>(
                          ControllerComponentVariables::SampledDataTxUpdatedMeasurands)));
 
     Transaction transaction{enhanced_transaction->transactionId};
@@ -122,12 +124,13 @@ void ChargePoint::on_transaction_finished(const int32_t evse_id, const DateTime&
     const auto transaction = enhanced_transaction->get_transaction();
     const auto meter_values = utils::get_meter_values_with_measurands_and_interval_applied(
         enhanced_transaction->meter_values,
-        utils::get_measurands_vec(this->device_model->get_value<std::string>(
+        utils::get_measurands_vec(this->device_model->get_variable_attribute_value<std::string>(
             ControllerComponentVariables::AlignedDataTxEndedMeasurands)),
-        utils::get_measurands_vec(this->device_model->get_value<std::string>(
+        utils::get_measurands_vec(this->device_model->get_variable_attribute_value<std::string>(
             ControllerComponentVariables::SampledDataTxEndedMeasurands)),
-        this->device_model->get_value<int>(ControllerComponentVariables::AlignedDataTxEndedInterval),
-        this->device_model->get_value<int>(ControllerComponentVariables::SampledDataTxEndedInterval));
+        this->device_model->get_variable_attribute_value<int>(ControllerComponentVariables::AlignedDataTxEndedInterval),
+        this->device_model->get_variable_attribute_value<int>(
+            ControllerComponentVariables::SampledDataTxEndedInterval));
     const auto seq_no = enhanced_transaction->get_seq_no();
     this->evses.at(evse_id)->release_transaction();
 
@@ -181,12 +184,16 @@ AuthorizeResponse ChargePoint::validate_token(const IdToken id_token, const std:
     IdTokenInfo id_token_info;
 
     // C01.FR.01
-    if (this->device_model->get_optional_value<bool>(ControllerComponentVariables::AuthCtrlrEnabled).value_or(true)) {
-        if (this->device_model->get_optional_value<bool>(ControllerComponentVariables::AuthCacheCtrlrEnabled).value_or(true)) {
+    if (this->device_model->get_variable_attribute_optional_value<bool>(ControllerComponentVariables::AuthCtrlrEnabled)
+            .value_or(true)) {
+        if (this->device_model
+                ->get_variable_attribute_optional_value<bool>(ControllerComponentVariables::AuthCacheCtrlrEnabled)
+                .value_or(true)) {
             const auto cache_entry =
                 this->database_handler->get_auth_cache_entry(utils::sha256(id_token.idToken.get()));
             if (cache_entry.has_value() and
-                this->device_model->get_value<bool>(ControllerComponentVariables::LocalPreAuthorize) and
+                this->device_model->get_variable_attribute_value<bool>(
+                    ControllerComponentVariables::LocalPreAuthorize) and
                 cache_entry.value().status == AuthorizationStatusEnum::Accepted and
                 (!cache_entry.value().cacheExpiryDateTime.has_value() or
                  cache_entry.value().cacheExpiryDateTime.value().to_time_point() > DateTime().to_time_point())) {
@@ -198,13 +205,13 @@ AuthorizeResponse ChargePoint::validate_token(const IdToken id_token, const std:
         response = this->authorize_req(id_token, certificate, ocsp_request_data);
         // C10.FR.08
         if (!response.idTokenInfo.cacheExpiryDateTime.has_value() and
-            this->device_model->get_optional_value<int>(ControllerComponentVariables::AuthCacheLifeTime)
+            this->device_model
+                ->get_variable_attribute_optional_value<int>(ControllerComponentVariables::AuthCacheLifeTime)
                 .has_value()) {
             // when CSMS does not set cacheExpiryDateTime and config variable for AuthCacheLifeTime is present
             response.idTokenInfo.cacheExpiryDateTime = DateTime(
-                date::utc_clock::now() +
-                std::chrono::seconds(
-                    this->device_model->get_value<int>(ControllerComponentVariables::AuthCacheLifeTime)));
+                date::utc_clock::now() + std::chrono::seconds(this->device_model->get_variable_attribute_value<int>(
+                                             ControllerComponentVariables::AuthCacheLifeTime)));
         }
         this->database_handler->insert_auth_cache_entry(utils::sha256(id_token.idToken.get()), response.idTokenInfo);
         return response;
@@ -239,24 +246,21 @@ bool ChargePoint::send(CallError call_error) {
 
 void ChargePoint::init_websocket() {
 
-    if (this->device_model->get_value<std::string>(ControllerComponentVariables::ChargePointId)
+    if (this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::ChargePointId)
             .find(':') != std::string::npos) {
         EVLOG_AND_THROW(std::runtime_error("ChargePointId must not contain \':\'"));
     }
 
-    // FIXME(piet): get password properly from configuration
-    std::optional<std::string> basic_auth_password;
-    basic_auth_password.emplace("DEADBEEFDEADBEEF");
-
     WebsocketConnectionOptions connection_options{
         OcppProtocolVersion::v201,
-        this->device_model->get_value<std::string>(ControllerComponentVariables::CentralSystemURI),
-        this->device_model->get_value<int>(ControllerComponentVariables::SecurityProfile),
-        this->device_model->get_value<std::string>(ControllerComponentVariables::ChargePointId),
-        basic_auth_password,
-        this->device_model->get_value<int>(ControllerComponentVariables::WebsocketReconnectInterval),
-        this->device_model->get_value<std::string>(ControllerComponentVariables::SupportedCiphers12),
-        this->device_model->get_value<std::string>(ControllerComponentVariables::SupportedCiphers13),
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::CentralSystemURI),
+        this->device_model->get_variable_attribute_value<int>(ControllerComponentVariables::SecurityProfile),
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::ChargePointId),
+        this->device_model->get_variable_attribute_optional_value<std::string>(
+            ControllerComponentVariables::BasicAuthPassword),
+        this->device_model->get_variable_attribute_value<int>(ControllerComponentVariables::WebsocketReconnectInterval),
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::SupportedCiphers12),
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::SupportedCiphers13),
         0,
         "payload",
         true,
@@ -357,7 +361,7 @@ void ChargePoint::message_callback(const std::string& message) {
 
 void ChargePoint::update_aligned_data_interval() {
     const auto next_timestamp = this->get_next_clock_aligned_meter_value_timestamp(
-        this->device_model->get_value<int>(ControllerComponentVariables::AlignedDataInterval));
+        this->device_model->get_variable_attribute_value<int>(ControllerComponentVariables::AlignedDataInterval));
     if (next_timestamp.has_value()) {
         EVLOG_debug << "Next meter value will be sent at: " << next_timestamp.value().to_rfc3339();
         this->aligned_meter_values_timer.at(
@@ -373,8 +377,9 @@ void ChargePoint::update_aligned_data_interval() {
                     // this will apply configured measurands and possibly reduce the entries of sampledValue
                     // according to the configuration
                     const auto meter_value = utils::get_meter_value_with_measurands_applied(
-                        _meter_value, utils::get_measurands_vec(this->device_model->get_value<std::string>(
-                                          ControllerComponentVariables::AlignedDataTxEndedMeasurands)));
+                        _meter_value,
+                        utils::get_measurands_vec(this->device_model->get_variable_attribute_value<std::string>(
+                            ControllerComponentVariables::AlignedDataTxEndedMeasurands)));
 
                     if (evse->has_active_transaction()) {
                         // add meter value to transaction meter values
@@ -387,7 +392,7 @@ void ChargePoint::update_aligned_data_interval() {
                             std::nullopt, std::nullopt);
                     } else if (!evse->has_active_transaction() and
                                this->device_model
-                                   ->get_optional_value<bool>(
+                                   ->get_variable_attribute_optional_value<bool>(
                                        ControllerComponentVariables::AlignedDataSendDuringIdle)
                                    .value_or(false)) {
                         if (!meter_value.sampledValue.empty()) {
@@ -435,13 +440,13 @@ void ChargePoint::boot_notification_req(const BootReasonEnum& reason) {
 
     ChargingStation charging_station;
     charging_station.model =
-        this->device_model->get_value<std::string>(ControllerComponentVariables::ChargePointModel);
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::ChargePointModel);
     charging_station.vendorName =
-        this->device_model->get_value<std::string>(ControllerComponentVariables::ChargePointVendor);
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::ChargePointVendor);
     charging_station.firmwareVersion.emplace(
-        this->device_model->get_value<std::string>(ControllerComponentVariables::FirmwareVersion));
-    charging_station.serialNumber.emplace(
-        this->device_model->get_value<std::string>(ControllerComponentVariables::ChargeBoxSerialNumber));
+        this->device_model->get_variable_attribute_value<std::string>(ControllerComponentVariables::FirmwareVersion));
+    charging_station.serialNumber.emplace(this->device_model->get_variable_attribute_value<std::string>(
+        ControllerComponentVariables::ChargeBoxSerialNumber));
 
     req.reason = reason;
     req.chargingStation = charging_station;
@@ -607,7 +612,7 @@ void ChargePoint::handle_set_variables_req(Call<SetVariablesRequest> call) {
         set_variable_result.component = set_variable_data.component;
         set_variable_result.variable = set_variable_data.variable;
         set_variable_result.attributeType = set_variable_data.attributeType.value_or(AttributeEnum::Actual);
-        set_variable_result.attributeStatus = this->device_model->set_value(
+        set_variable_result.attributeStatus = this->device_model->set_variable_attribute_value(
             set_variable_data.component, set_variable_data.variable,
             set_variable_data.attributeType.value_or(AttributeEnum::Actual), set_variable_data.attributeValue.get());
 
@@ -626,19 +631,20 @@ void ChargePoint::handle_get_variables_req(Call<GetVariablesRequest> call) {
 
     GetVariablesResponse response;
 
-    // for (const auto& get_variable_data : msg.getVariableData) {
-    //     GetVariableResult get_variable_result;
-    //     get_variable_result.component = get_variable_data.component;
-    //     get_variable_result.variable = get_variable_data.variable;
-    //     get_variable_result.attributeType = get_variable_data.attributeType.value_or(AttributeEnum::Actual);
-    //     const auto status_value_pair = this->device_model->get_variable(get_variable_data);
-    //     get_variable_result.attributeStatus = status_value_pair.first;
-    //     if (status_value_pair.second.has_value()) {
-    //         get_variable_result.attributeValue.emplace(status_value_pair.second.value());
-    //     }
-
-    //     response.getVariableResult.push_back(get_variable_result);
-    // }
+    for (const auto& get_variable_data : msg.getVariableData) {
+        GetVariableResult get_variable_result;
+        get_variable_result.component = get_variable_data.component;
+        get_variable_result.variable = get_variable_data.variable;
+        get_variable_result.attributeType = get_variable_data.attributeType.value_or(AttributeEnum::Actual);
+        const auto device_model_response = this->device_model->request_variable_attribute_value<std::string>(
+            get_variable_data.component, get_variable_data.variable,
+            get_variable_data.attributeType.value_or(AttributeEnum::Actual));
+        if (device_model_response.status == GetVariableStatusEnum::Accepted) {
+            get_variable_result.attributeValue = device_model_response.value.value();
+        }
+        get_variable_result.attributeStatus = device_model_response.status;
+        response.getVariableResult.push_back(get_variable_result);
+    }
 
     ocpp::CallResult<GetVariablesResponse> call_result(response, call.uniqueId);
     this->send<GetVariablesResponse>(call_result);
@@ -656,8 +662,8 @@ void ChargePoint::handle_get_base_report_req(Call<GetBaseReportRequest> call) {
     this->send<GetBaseReportResponse>(call_result);
 
     // TODO(piet): Propably split this up into several NotifyReport.req depending on ItemsPerMessage / BytesPerMessage
-    // const auto report_data = this->device_model->get_report_data(msg.reportBase);
-    // this->notify_report_req(msg.requestId, 0, report_data);
+    const auto report_data = this->device_model->get_report_data(msg.reportBase);
+    this->notify_report_req(msg.requestId, 0, report_data);
 }
 
 void ChargePoint::handle_get_report_req(Call<GetReportRequest> call) {
@@ -666,21 +672,20 @@ void ChargePoint::handle_get_report_req(Call<GetReportRequest> call) {
     GetReportResponse response;
 
     // TODO(piet): Propably split this up into several NotifyReport.req depending on ItemsPerMessage / BytesPerMessage
-    // const auto report_data = this->device_model->get_report_data(ReportBaseEnum::FullInventory,
-    // msg.componentVariable,
-    //                                                              msg.componentCriteria);
-    // if (report_data.empty()) {
-    //     response.status = GenericDeviceModelStatusEnum::EmptyResultSet;
-    // } else {
-    //     response.status = GenericDeviceModelStatusEnum::Accepted;
-    // }
+    const auto report_data = this->device_model->get_report_data(ReportBaseEnum::FullInventory, msg.componentVariable,
+                                                                 msg.componentCriteria);
+    if (report_data.empty()) {
+        response.status = GenericDeviceModelStatusEnum::EmptyResultSet;
+    } else {
+        response.status = GenericDeviceModelStatusEnum::Accepted;
+    }
 
     ocpp::CallResult<GetReportResponse> call_result(response, call.uniqueId);
     this->send<GetReportResponse>(call_result);
 
-    // if (response.status == GenericDeviceModelStatusEnum::Accepted) {
-    //     this->notify_report_req(msg.requestId, 0, report_data);
-    // }
+    if (response.status == GenericDeviceModelStatusEnum::Accepted) {
+        this->notify_report_req(msg.requestId, 0, report_data);
+    }
 }
 
 void ChargePoint::handle_reset_req(Call<ResetRequest> call) {
@@ -743,10 +748,11 @@ void ChargePoint::handle_start_transaction_event_response(CallResult<Transaction
                                                           const int32_t evse_id) {
     const auto msg = call_result.msg;
     if (msg.idTokenInfo.has_value() and msg.idTokenInfo.value().status != AuthorizationStatusEnum::Accepted) {
-        if (this->device_model->get_value<bool>(ControllerComponentVariables::StopTxOnInvalidId)) {
+        if (this->device_model->get_variable_attribute_value<bool>(ControllerComponentVariables::StopTxOnInvalidId)) {
             this->callbacks.stop_transaction_callback(evse_id, ReasonEnum::DeAuthorized);
         } else {
-            if (this->device_model->get_optional_value<bool>(ControllerComponentVariables::MaxEnergyOnInvalidId)
+            if (this->device_model
+                    ->get_variable_attribute_optional_value<bool>(ControllerComponentVariables::MaxEnergyOnInvalidId)
                     .has_value()) {
                 // TODO(piet): E05.FR.03
                 // Energy delivery to the EV SHALL be allowed until the amount of energy specified in

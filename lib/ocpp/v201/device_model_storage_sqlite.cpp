@@ -10,73 +10,65 @@ namespace v201 {
 
 DeviceModelStorageSqlite::DeviceModelStorageSqlite(const std::filesystem::path& db_path) {
     if (sqlite3_open(db_path.c_str(), &this->db) != SQLITE_OK) {
-        EVLOG_info << "Error opening database: " << sqlite3_errmsg(db);
-        throw std::runtime_error("Could not open database at provided path.");
+        EVLOG_error << "Could not open database at provided path: " << db_path;
+        EVLOG_AND_THROW(std::runtime_error("Could not open device model database at provided path."));
     } else {
-        EVLOG_info << "Established connection to database successfully!";
+        EVLOG_info << "Established connection to device model database successfully: " << db_path;
     }
 }
 
 std::map<Component, std::map<Variable, VariableMetaData>> DeviceModelStorageSqlite::get_device_model() {
     std::map<Component, std::map<Variable, VariableMetaData>> device_model;
 
-    std::string select_query = "SELECT c.COMPONENT_NAME, c.EVSE_ID, c.INSTANCE_ID, v.NAME, v.INSTANCE_ID, vc.DATATYPE, "
+    std::string select_query = "SELECT c.NAME, c.EVSE_ID, c.INSTANCE, v.NAME, v.INSTANCE, vc.DATATYPE_ID, "
                                "vc.SUPPORTS_MONITORING, vc.UNIT, vc.MIN_LIMIT, vc.MAX_LIMIT, vc.VALUES_LIST "
                                "FROM COMPONENT c "
                                "JOIN VARIABLE v ON c.ID = v.COMPONENT_ID "
                                "JOIN VARIABLE_CHARACTERISTICS vc ON v.VARIABLE_CHARACTERISTICS_ID = vc.ID";
 
-    sqlite3_stmt* select_stmt;
-    auto rc = sqlite3_prepare_v2(db, select_query.c_str(), -1, &select_stmt, nullptr);
-
-    if (rc != SQLITE_OK) {
-        // Handle query preparation error
-        sqlite3_close(db);
-        return device_model;
-    }
+    SQLiteStatement select_stmt(this->db, select_query);
 
     // Execute the select query
-    while (sqlite3_step(select_stmt) == SQLITE_ROW) {
+    while (sqlite3_step(select_stmt.get()) == SQLITE_ROW) {
         Component component;
-        component.name = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 0));
+        component.name = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 0));
 
-        if (sqlite3_column_type(select_stmt, 1) != SQLITE_NULL) {
-            auto evse_id = sqlite3_column_int(select_stmt, 1);
+        if (sqlite3_column_type(select_stmt.get(), 1) != SQLITE_NULL) {
+            auto evse_id = sqlite3_column_int(select_stmt.get(), 1);
             EVSE evse;
             evse.id = evse_id;
             component.evse = evse;
         }
 
-        if (sqlite3_column_type(select_stmt, 2) != SQLITE_NULL) {
-            component.instance = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 2));
+        if (sqlite3_column_type(select_stmt.get(), 2) != SQLITE_NULL) {
+            component.instance = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 2));
         }
 
         Variable variable;
-        variable.name = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 3));
+        variable.name = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 3));
 
-        if (sqlite3_column_type(select_stmt, 4) != SQLITE_NULL) {
-            variable.instance = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 4));
+        if (sqlite3_column_type(select_stmt.get(), 4) != SQLITE_NULL) {
+            variable.instance = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 4));
         }
 
         VariableCharacteristics characteristics;
-        characteristics.dataType =
-            conversions::string_to_data_enum(reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 5)));
-        characteristics.supportsMonitoring = sqlite3_column_int(select_stmt, 6) != 0;
+        characteristics.dataType = static_cast<DataEnum>(sqlite3_column_int(select_stmt.get(), 5));
+        characteristics.supportsMonitoring = sqlite3_column_int(select_stmt.get(), 6) != 0;
 
-        if (sqlite3_column_type(select_stmt, 7) != SQLITE_NULL) {
-            characteristics.unit = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 7));
+        if (sqlite3_column_type(select_stmt.get(), 7) != SQLITE_NULL) {
+            characteristics.unit = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 7));
         }
 
-        if (sqlite3_column_type(select_stmt, 8) != SQLITE_NULL) {
-            characteristics.minLimit = sqlite3_column_double(select_stmt, 8);
+        if (sqlite3_column_type(select_stmt.get(), 8) != SQLITE_NULL) {
+            characteristics.minLimit = sqlite3_column_double(select_stmt.get(), 8);
         }
 
-        if (sqlite3_column_type(select_stmt, 9) != SQLITE_NULL) {
-            characteristics.maxLimit = sqlite3_column_double(select_stmt, 9);
+        if (sqlite3_column_type(select_stmt.get(), 9) != SQLITE_NULL) {
+            characteristics.maxLimit = sqlite3_column_double(select_stmt.get(), 9);
         }
 
-        if (sqlite3_column_type(select_stmt, 10) != SQLITE_NULL) {
-            characteristics.valuesList = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 10));
+        if (sqlite3_column_type(select_stmt.get(), 10) != SQLITE_NULL) {
+            characteristics.valuesList = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 10));
         }
 
         VariableMetaData meta_data;
@@ -85,153 +77,124 @@ std::map<Component, std::map<Variable, VariableMetaData>> DeviceModelStorageSqli
         device_model[component][variable] = meta_data;
     }
 
-    sqlite3_finalize(select_stmt);
-
     EVLOG_info << "Successfully retrieved Device Model from DeviceModelStorage";
     return device_model;
 }
 
 std::optional<VariableAttribute> DeviceModelStorageSqlite::get_variable_attribute(const Component& component,
-                                                                        const Variable& variable,
-                                                                        const AttributeEnum& attribute_enum) {
+                                                                                  const Variable& variable,
+                                                                                  const AttributeEnum& attribute_enum) {
+    const auto attributes = this->get_variable_attributes(component, variable, attribute_enum);
+    if (!attributes.empty()) {
+        return attributes.at(0);
+    } else {
+        return std::nullopt;
+    }
+}
 
-    std::optional<VariableAttribute> result;
+std::vector<VariableAttribute>
+DeviceModelStorageSqlite::get_variable_attributes(const Component& component, const Variable& variable,
+                                                  const std::optional<AttributeEnum>& attribute_enum) {
+    std::vector<VariableAttribute> attributes;
 
-    std::string select_query = "SELECT va.VALUE, va.MUTABILITY, va.PERSISTENT, va.CONSTANT "
+    std::string select_query = "SELECT va.VALUE, va.MUTABILITY_ID, va.PERSISTENT, va.CONSTANT, va.TYPE_ID "
                                "FROM VARIABLE_ATTRIBUTE va "
                                "JOIN VARIABLE v ON va.VARIABLE_ID = v.ID "
                                "JOIN COMPONENT c ON v.COMPONENT_ID = c.ID "
-                               "WHERE c.COMPONENT_NAME = ? AND v.NAME = ? AND va.ATTRIBUTE_TYPE_ID = ?";
+                               "WHERE c.NAME = @component_name AND v.NAME = @variable_name";
 
-    sqlite3_stmt* select_stmt;
-    auto rc = sqlite3_prepare_v2(db, select_query.c_str(), -1, &select_stmt, nullptr);
-
-    if (rc != SQLITE_OK) {
-        EVLOG_info << sqlite3_errmsg(db);
-        sqlite3_close(db);
-        return result;
+    if (attribute_enum.has_value()) {
+        std::stringstream ss;
+        ss << select_query << "  AND va.TYPE_ID = " << static_cast<int>(attribute_enum.value());
+        select_query = ss.str();
     }
 
+    SQLiteStatement select_stmt(this->db, select_query);
+
+
+    const auto component_name = component.name.get();
+    const auto variable_name = variable.name.get();
+
     // Bind the parameters to the prepared statement
-    sqlite3_bind_text(select_stmt, 1, component.name.get().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(select_stmt, 2, variable.name.get().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(select_stmt, 3, static_cast<int>(1));
+    sqlite3_bind_text(select_stmt.get(), 1, component_name.c_str(), component_name.length(), NULL);
+    sqlite3_bind_text(select_stmt.get(), 2, variable_name.c_str(), variable_name.length(), NULL);
 
     // Execute the select query
-    if (sqlite3_step(select_stmt) == SQLITE_ROW) {
+    while (sqlite3_step(select_stmt.get()) == SQLITE_ROW) {
         VariableAttribute attribute;
 
         // Retrieve column values and assign them to the corresponding members of the attribute object
-        if (sqlite3_column_type(select_stmt, 0) != SQLITE_NULL) {
-            attribute.value = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt, 0));
+        if (sqlite3_column_type(select_stmt.get(), 0) != SQLITE_NULL) {
+            attribute.value = reinterpret_cast<const char*>(sqlite3_column_text(select_stmt.get(), 0));
         }
-        attribute.mutability = MutabilityEnum::ReadWrite;
-        attribute.persistent = static_cast<bool>(sqlite3_column_int(select_stmt, 2));
-        attribute.constant = static_cast<bool>(sqlite3_column_int(select_stmt, 3));
-
-        result = attribute;
+        attribute.mutability = static_cast<MutabilityEnum>(sqlite3_column_int(select_stmt.get(), 1));
+        attribute.persistent = static_cast<bool>(sqlite3_column_int(select_stmt.get(), 2));
+        attribute.constant = static_cast<bool>(sqlite3_column_int(select_stmt.get(), 3));
+        attribute.type = static_cast<AttributeEnum>(sqlite3_column_int(select_stmt.get(), 4));
+        attributes.push_back(attribute);
     }
 
-    sqlite3_finalize(select_stmt);
-    return result;
+    return attributes;
 }
 
-std::optional<std::string> DeviceModelStorageSqlite::get_value(const Component& component, const Variable& variable,
-                                                     const AttributeEnum& attribute_enum) {
-    const auto attribute = this->get_variable_attribute(component, variable, attribute_enum);
-    if (attribute.has_value()) {
-        return attribute.value().value.value().get();
-    }
-    return std::nullopt;
-}
+bool DeviceModelStorageSqlite::set_variable_attribute_value(const Component& component, const Variable& variable,
+                                                            const AttributeEnum& attribute_enum,
+                                                            const std::string& value) {
+    std::string select_component_id_query = "SELECT ID FROM COMPONENT WHERE NAME = ?";
+    std::string select_variable_id_query = "SELECT ID FROM VARIABLE WHERE NAME = ?";
+    std::string select_attribute_type_id_query = "SELECT ID FROM VARIABLE_ATTRIBUTE_TYPE WHERE ID = ?";
+    std::string insert_query = "UPDATE VARIABLE_ATTRIBUTE SET VALUE=? WHERE VARIABLE_ID = ? AND TYPE_ID = ?";
 
-bool DeviceModelStorageSqlite::set_value(const Component& component, const Variable& variable,
-                               const AttributeEnum& attribute_enum, const std::string& value) {
-    const auto select_component_id_query = "SELECT ID FROM COMPONENT WHERE COMPONENT_NAME = ?";
-    const auto select_variable_id_query = "SELECT ID FROM VARIABLE WHERE NAME = ?";
-    const auto select_attribute_type_id_query = "SELECT ID FROM VARIABLE_ATTRIBUTE_TYPE WHERE ATTRIBUTE_TYPE = ?";
-    const auto insert_query = "UPDATE VARIABLE_ATTRIBUTE SET VALUE=? WHERE VARIABLE_ID = ? AND ATTRIBUTE_TYPE_ID = ?";
+    SQLiteStatement select_component_id_stmt(this->db, select_component_id_query);
+    SQLiteStatement select_variable_id_stmt(this->db, select_variable_id_query);
+    SQLiteStatement select_attribute_type_id_stmt(this->db, select_attribute_type_id_query);
+    SQLiteStatement insert_stmt(this->db, insert_query);
 
-    sqlite3_stmt* select_component_id_stmt;
-    sqlite3_stmt* select_variable_id_stmt;
-    sqlite3_stmt* select_attribute_type_id_stmt;
-    sqlite3_stmt* insert_stmt;
-
-    // Prepare the select queries
-    auto rc = sqlite3_prepare_v2(db, select_component_id_query, -1, &select_component_id_stmt, nullptr);
-    if (rc != SQLITE_OK) {
-        // Handle query preparation error
-        return false;
-    }
-
-    rc = sqlite3_prepare_v2(db, select_variable_id_query, -1, &select_variable_id_stmt, nullptr);
-    if (rc != SQLITE_OK) {
-        // Handle query preparation error
-        sqlite3_finalize(select_component_id_stmt);
-        return false;
-    }
-
-    rc = sqlite3_prepare_v2(db, select_attribute_type_id_query, -1, &select_attribute_type_id_stmt, nullptr);
-    if (rc != SQLITE_OK) {
-        // Handle query preparation error
-        sqlite3_finalize(select_component_id_stmt);
-        sqlite3_finalize(select_variable_id_stmt);
-        return false;
-    }
+    const auto component_name = component.name.get();
+    const auto variable_name = variable.name.get();
 
     // Bind values to the select queries
-    sqlite3_bind_text(select_component_id_stmt, 1, component.name.get().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(select_variable_id_stmt, 1, variable.name.get().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(select_attribute_type_id_stmt, 1, "Actual", -1, SQLITE_STATIC);
+    sqlite3_bind_text(select_component_id_stmt.get(), 1, component_name.c_str(), component_name.length(), NULL);
+    sqlite3_bind_text(select_variable_id_stmt.get(), 1, variable_name.c_str(), variable_name.length(), NULL);
+    sqlite3_bind_int(select_attribute_type_id_stmt.get(), 1, static_cast<int>(attribute_enum));
 
     // Execute the select queries
     auto component_id = -1;
     auto variable_id = -1;
     auto attribute_type_id = -1;
 
-    rc = sqlite3_step(select_component_id_stmt);
+    auto rc = sqlite3_step(select_component_id_stmt.get());
     if (rc == SQLITE_ROW) {
-        // Retrieve the component ID
-        component_id = sqlite3_column_int(select_component_id_stmt, 0);
+        component_id = sqlite3_column_int(select_component_id_stmt.get(), 0);
+    } else {
+        return false;
     }
 
-    rc = sqlite3_step(select_variable_id_stmt);
+    rc = sqlite3_step(select_variable_id_stmt.get());
     if (rc == SQLITE_ROW) {
-        // Retrieve the variable ID
-        variable_id = sqlite3_column_int(select_variable_id_stmt, 0);
+        variable_id = sqlite3_column_int(select_variable_id_stmt.get(), 0);
+    } else {
+        return false;
     }
 
-    rc = sqlite3_step(select_attribute_type_id_stmt);
+    rc = sqlite3_step(select_attribute_type_id_stmt.get());
     if (rc == SQLITE_ROW) {
-        // Retrieve the attribute type ID
-        attribute_type_id = sqlite3_column_int(select_attribute_type_id_stmt, 0);
-    }
-
-    sqlite3_finalize(select_component_id_stmt);
-    sqlite3_finalize(select_variable_id_stmt);
-    sqlite3_finalize(select_attribute_type_id_stmt);
-
-    // Prepare the insert query
-    rc = sqlite3_prepare_v2(db, insert_query, -1, &insert_stmt, nullptr);
-    if (rc != SQLITE_OK) {
-        // Handle query preparation error
-        return rc;
+        attribute_type_id = sqlite3_column_int(select_attribute_type_id_stmt.get(), 0);
+    } else {
+        return false;
     }
 
     // Bind values to the insert query
-    sqlite3_bind_text(insert_stmt, 1, value.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(insert_stmt, 2, variable_id);
-    sqlite3_bind_int(insert_stmt, 3, attribute_type_id);
+    sqlite3_bind_text(insert_stmt.get(), 1, value.c_str(), value.length(), NULL);
+    sqlite3_bind_int(insert_stmt.get(), 2, variable_id);
+    sqlite3_bind_int(insert_stmt.get(), 3, attribute_type_id);
 
     // Execute the insert query
-    rc = sqlite3_step(insert_stmt);
+    rc = sqlite3_step(insert_stmt.get());
     if (rc != SQLITE_DONE) {
-        // Handle query execution error
-        sqlite3_finalize(insert_stmt);
-        return rc;
+        EVLOG_error << sqlite3_errmsg(this->db);
+        return false;
     }
-
-    sqlite3_finalize(insert_stmt);
 
     return true;
 }

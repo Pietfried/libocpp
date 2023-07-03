@@ -7,33 +7,56 @@
 #include <filesystem>
 #include <map>
 #include <memory>
-#include <optional>
 #include <ocpp/v201/ocpp_types.hpp>
+#include <optional>
 
 namespace ocpp {
 namespace v201 {
 
+/// \brief Helper struct that combines VariableCharacteristics and VariableMonitoring
 struct VariableMetaData {
     VariableCharacteristics characteristics;
     std::vector<VariableMonitoring> monitors;
 };
 
+/// \brief Abstract base class for device model storage. This class provides an interface for accessing and modifying
+/// device model data. Implementations of this class should provide concrete implementations for the virtual methods
+/// declared here.
 class DeviceModelStorage {
 
 public:
     virtual ~DeviceModelStorage(){};
 
+    /// \brief Gets the device model from the device model storage
+    /// \return std::map<Component, std::map<Variable, VariableMetaData>> that will contain a full representation of the
+    /// device model except for the VariableAttribute(s) of each Variable.
     virtual std::map<Component, std::map<Variable, VariableMetaData>> get_device_model() = 0;
 
+    /// \brief Gets a VariableAttribute from the storage if present
+    /// \param component
+    /// \param variable
+    /// \param attribute_enum
+    /// \return VariableAttribute or std::nullopt if not present in the storage
     virtual std::optional<VariableAttribute> get_variable_attribute(const Component& component,
                                                                     const Variable& variable,
                                                                     const AttributeEnum& attribute_enum) = 0;
+    /// \brief Gets a std::vector<VariableAttribute> from the storage.
+    /// \param component
+    /// \param variable
+    /// \param attribute_enum optionally specifies an AttributeEnum. In this case this std::vector will contain max. one
+    /// element \return
+    virtual std::vector<VariableAttribute>
+    get_variable_attributes(const Component& component, const Variable& variable,
+                            const std::optional<AttributeEnum>& attribute_enum = std::nullopt) = 0;
 
-    virtual std::optional<std::string> get_value(const Component& component, const Variable& variable,
-                                                 const AttributeEnum& attribute_enum) = 0;
-
-    virtual bool set_value(const Component& component, const Variable& variable, const AttributeEnum& attribute_enum,
-                           const std::string& value) = 0;
+    /// \brief Sets the value of an VariableAttribute if present
+    /// \param component
+    /// \param variable
+    /// \param attribute_enum
+    /// \param value
+    /// \return true if the value could be set in the storage, else false
+    virtual bool set_variable_attribute_value(const Component& component, const Variable& variable,
+                                              const AttributeEnum& attribute_enum, const std::string& value) = 0;
 };
 
 } // namespace v201

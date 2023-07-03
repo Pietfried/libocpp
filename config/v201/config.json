@@ -44,7 +44,8 @@
     "SecurityCtrlr": {
         "SecurityProfile": 1,
         "OrganizationName": "Pionix",
-        "CertificateEntries": 100
+        "CertificateEntries": 100,
+        "BasicAuthPassword": "DEADBEEFDEADBEEF"
     },
     "DeviceDataCtrlr": {
         "ItemsPerMessageGetReport": 200,
