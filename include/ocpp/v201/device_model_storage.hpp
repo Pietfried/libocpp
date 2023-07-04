@@ -7,8 +7,9 @@
 #include <filesystem>
 #include <map>
 #include <memory>
-#include <ocpp/v201/ocpp_types.hpp>
 #include <optional>
+
+#include <ocpp/v201/ocpp_types.hpp>
 
 namespace ocpp {
 namespace v201 {
@@ -17,6 +18,26 @@ namespace v201 {
 struct VariableMetaData {
     VariableCharacteristics characteristics;
     std::vector<VariableMonitoring> monitors;
+};
+
+inline bool operator==(const EVSE& lhs, const EVSE& rhs) {
+    return lhs.id == rhs.id and lhs.connectorId == rhs.connectorId;
+};
+
+inline bool operator==(const Component& lhs, const Component& rhs) {
+    return lhs.name.get() == rhs.name.get() and lhs.instance == rhs.instance and lhs.evse == rhs.evse;
+};
+
+inline bool operator<(const Component& lhs, const Component& rhs) {
+    return false;
+};
+
+inline bool operator==(const Variable& lhs, const Variable& rhs) {
+    return lhs.name.get() == rhs.name.get() and lhs.instance == rhs.instance;
+};
+
+inline bool operator<(const Variable& lhs, const Variable& rhs) {
+    return false;
 };
 
 /// \brief Abstract base class for device model storage. This class provides an interface for accessing and modifying

@@ -53,11 +53,11 @@ public:
     std::vector<VariableAttribute> get_variable_attributes(const Component& component, const Variable& variable,
                                                            const std::optional<AttributeEnum>& attribute_enum) override;
 
-    bool set_variable_attribute_value(const Component& component, const Variable& variable, const AttributeEnum& attribute_enum,
-                   const std::string& value) override;
+    bool set_variable_attribute_value(const Component& component, const Variable& variable,
+                                      const AttributeEnum& attribute_enum, const std::string& value) override;
 };
 
 } // namespace v201
 } // namespace ocpp
 
-#endif
+#endif // DEVICE_MODEL_STORAGE_SQLITE_HPP
