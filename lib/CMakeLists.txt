@@ -34,6 +34,34 @@ target_sources(ocpp
         ocpp/v201/utils.cpp
 )
 
+# checking for external device model dir
+# FIXME (aw): this cmake code should probably reside somewhere else!
+if (EXTERNAL_DEVICE_MODEL_BACKEND_DIR)
+    if (NOT EXISTS ${EXTERNAL_DEVICE_MODEL_BACKEND_DIR})
+        message(FATAL_ERROR "Directory for external device model backend (${EXTERNAL_DEVICE_MODEL_BACKEND_DIR}) does not exist")
+    endif()
+
+    message(STATUS "Building with external device model backend from ${EXTERNAL_DEVICE_MODEL_BACKEND_DIR}")
+
+    set(USE_EXTERNAL_DEVICE_MODEL_BACKEND ON)
+    set(LIBOCPP_TARGET_NAME ocpp)
+
+    set_property(
+        SOURCE ocpp/v201/device_model.cpp
+        APPEND 
+        PROPERTY COMPILE_DEFINITIONS
+            USE_EXTERNAL_DEVICE_MODEL_BACKEND=1
+    )
+
+    target_include_directories(ocpp
+        PRIVATE
+            ${EXTERNAL_DEVICE_MODEL_BACKEND_DIR}
+    )
+
+    add_subdirectory(${EXTERNAL_DEVICE_MODEL_BACKEND_DIR} ${CMAKE_CURRENT_BINARY_DIR}/ext_device_model)
+
+endif()
+
 add_subdirectory(ocpp/common/websocket)
 add_subdirectory(ocpp/v16/messages)
 add_subdirectory(ocpp/v201/messages)

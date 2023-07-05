@@ -3,6 +3,10 @@
 
 #include <ocpp/v201/device_model.hpp>
 
+#ifdef USE_EXTERNAL_DEVICE_MODEL_BACKEND
+#include "device_model_storage_custom.hpp"
+#endif
+
 namespace ocpp {
 
 namespace v201 {
@@ -31,7 +35,11 @@ bool DeviceModel::component_criteria_match(const Component& component,
 }
 
 DeviceModel::DeviceModel() {
+#ifndef USE_EXTERNAL_DEVICE_MODEL_BACKEND
     this->storage = std::make_unique<DeviceModelStorageSqlite>("/tmp/device_model_ocpp201.db"); // FIXME(piet)
+#else
+    this->storage = std::make_unique<DeviceModelStorageCustom>();
+#endif
     this->device_model = this->storage->get_device_model();
 };
 
