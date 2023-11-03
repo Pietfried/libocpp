@@ -139,6 +139,11 @@ private:
     // time keeping
     std::chrono::time_point<std::chrono::steady_clock> heartbeat_request_time;
 
+    // threads and synchronization
+    std::condition_variable auth_cache_cleanup_cv;
+    std::mutex auth_cache_cleanup_mutex;
+    std::thread auth_cache_cleanup_thread;
+
     // states
     RegistrationStatusEnum registration_status;
     OperationalStatusEnum operational_state;
