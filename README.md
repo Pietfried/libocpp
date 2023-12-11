@@ -509,7 +509,7 @@ python3 -m pip install gcovr
 Run the unit tests
   
 ```bash
-  cmake .. -DBUILD_TESTING=ON
+  cmake .. -DLIBOCPP_BUILD_TESTING=ON
 ```
 
 ## Building with FetchContent instead of EDM
