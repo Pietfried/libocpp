@@ -11,7 +11,7 @@
 
 #include <stdexcept>
 #include <string>
-
+#include <future>
 using namespace std::chrono_literals;
 
 const auto DEFAULT_MAX_CUSTOMER_INFORMATION_DATA_LENGTH = 51200;
@@ -649,6 +649,8 @@ bool ChargePoint::send(CallError call_error) {
 
 void ChargePoint::init_websocket() {
 
+    std::promise<int> network_promise;
+
     if (this->device_model->get_value<std::string>(ControllerComponentVariables::ChargePointId).find(':') !=
         std::string::npos) {
         EVLOG_AND_THROW(std::runtime_error("ChargePointId must not contain \':\'"));
@@ -663,7 +665,8 @@ void ChargePoint::init_websocket() {
 
     if (!network_connection_profile.has_value() or
         (this->callbacks.configure_network_connection_profile_callback.has_value() and
-         !this->callbacks.configure_network_connection_profile_callback.value()(network_connection_profile.value()))) {
+         !this->callbacks.configure_network_connection_profile_callback.value()(network_connection_profile.value(),
+                                                                                network_promise))) {
         EVLOG_warning << "NetworkConnectionProfile could not be retrieved or configuration of network with the given "
                          "profile failed";
         this->websocket_timer.timeout(
@@ -675,6 +678,8 @@ void ChargePoint::init_websocket() {
         return;
     }
 
+    EVLOG_info << "connection profile value: -> " << network_promise.get_future().get();
+    
     const auto& security_profile_cv = ControllerComponentVariables::SecurityProfile;
     if (security_profile_cv.variable.has_value()) {
         this->device_model->set_read_only_value(security_profile_cv.component, security_profile_cv.variable.value(),
