@@ -166,6 +166,12 @@ struct Callbacks {
     /// \brief Callback function that can be used to handle arbitrary data transfers for all vendorId and
     /// messageId
     std::optional<std::function<DataTransferResponse(const DataTransferRequest& request)>> data_transfer_callback;
+
+    /// \brief register a \p callback that is called when the websocket is connected successfully
+    std::function < void(std::optional<NetworkConnectionProfile> network_profile)> websocket_connected_callback;
+
+    /// \brief register a \p callback that is called when the websocket connection is disconnected
+    std::function<void()>websocket_disconnected_callback;
 };
 
 /// \brief Combines ChangeAvailabilityRequest with persist flag for scheduled Availability changes
