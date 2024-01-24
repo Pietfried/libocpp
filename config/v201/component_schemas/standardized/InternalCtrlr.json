@@ -537,6 +537,24 @@
           "description": "List of criteria supported for a get custom report. Enabled,Active,Problem,Available",
           "default": "Enabled,Active,Problem,Available",
           "type": "string"
+      },
+      "NetworkConfigTimeout": {
+          "variable_name": "NetworkConfigTimeout",
+          "characteristics": {
+              "supportsMonitoring": true,
+              "dataType": "integer",
+              "minLimit": 1
+          },
+          "attributes": [
+              {
+                  "type": "Actual",
+                  "mutability": "ReadWrite"
+              }
+          ],
+          "description": "Timeout value in seconds to wait for a response from a network configuration request",
+          "minimum": 1,
+          "default": "160",
+          "type": "integer"
       }
   },
   "required": [
