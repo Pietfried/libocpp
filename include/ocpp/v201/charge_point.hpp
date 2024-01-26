@@ -735,6 +735,8 @@ public:
                                                 const AttributeEnum& attribute_enum) {
         return this->device_model->request_value<T>(component_id, variable_id, attribute_enum);
     }
+
+    bool on_try_switch_network_connection_profile(const std::string configuration_slot);
 };
 
 } // namespace v201
