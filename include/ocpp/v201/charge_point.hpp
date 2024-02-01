@@ -267,6 +267,8 @@ private:
 
     bool send(CallError call_error);
 
+    ConfigNetworkResult config_network_profile_result;
+
     // internal helper functions
 
     /// @brief Initialize the websocket connection.
