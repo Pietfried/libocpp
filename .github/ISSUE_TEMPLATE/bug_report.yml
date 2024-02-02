@@ -2,10 +2,15 @@ name: Bug Report
 description: Report a bug in libocpp
 
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
   - type: dropdown
     id: affected-ocpp-version
     attributes:
-      label: Which OCPP is affected?
+      label: OCPP Version
+      description: Which OCPP is affected?
       options:
         - OCPP1.6
         - OCPP2.0.1
@@ -17,8 +22,7 @@ body:
     id: description
     attributes:
       label: Describe the bug
-      placeholder: |
-        A clear and concise description of what the bug is. If applicable, add screenshots or logfiles to help explain your problem.
+      description: A clear and concise description of what the bug is. If applicable, add screenshots or logfiles to help explain your problem.
     validations:
       required: true
 
@@ -26,11 +30,8 @@ body:
     id: reproduction
     attributes:
       label: To Reproduce
-      placeholder: |
-        If applicable describe the steps to and additional information to reproduce the behavior like:
-          * Message communication between CSMS and ChargePoint
-          * Used configuration(s)
-          * Your system information
+      description: |
+        If applicable describe the steps to and additional information to reproduce the behavior like message communication between CSMS and , used configuration(s) and your system information
 
   - type: textarea
     id: other

@@ -1,0 +1,44 @@
+name: Feature Request
+description: Request a feature in libocpp
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: dropdown
+    id: affected-ocpp-version
+    attributes:
+      label: OCPP Version
+      description: For which OCPP do you suggest this feature? Mark both if applicable.
+      options:
+        - OCPP1.6
+        - OCPP2.0.1
+      multiple: true
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the problem
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: |
+        A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Describe your solution
+      description: Describe the solution you'd like
+      placeholder: |
+        A clear and concise description of what you want to happen.
+
+  - type: textarea
+    id: other
+    attributes:
+      label: Additional context
+      placeholder: Add any other context or screenshots about the feature request here.
+
