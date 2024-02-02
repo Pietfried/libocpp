@@ -1,11 +1,7 @@
 name: Bug Report
-description: Report a bug in libocpp
+description: Thanks for taking the time to fill out this bug report!
 
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
   - type: dropdown
     id: affected-ocpp-version
     attributes:
@@ -31,7 +27,7 @@ body:
     attributes:
       label: To Reproduce
       description: |
-        If applicable describe the steps to and additional information to reproduce the behavior like message communication between CSMS and , used configuration(s) and your system information
+        If applicable describe the steps to and additional information to reproduce the behavior like message communication between CSMS, used configuration(s) and your system information
 
   - type: textarea
     id: other
