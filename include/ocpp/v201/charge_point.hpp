@@ -125,12 +125,7 @@ struct Callbacks {
     std::function<UpdateFirmwareResponse(const UpdateFirmwareRequest& request)> update_firmware_request_callback;
     // callback to be called when a variable has been changed by the CSMS
     std::optional<std::function<void(const SetVariableData& set_variable_data)>> variable_changed_callback;
-    // callback is called when receiving a SetNetworkProfile.req from the CSMS
-    std::optional<std::function<SetNetworkProfileStatusEnum(
-        const int32_t configuration_slot, const NetworkConnectionProfile& network_connection_profile)>>
-        validate_network_profile_callback;
-    std::optional<std::function<bool(const NetworkConnectionProfile& network_connection_profile)>>
-        configure_network_connection_profile_callback;
+
     std::optional<std::function<void(const ocpp::DateTime& currentTime)>> time_sync_callback;
 
     /// \brief callback to be called to congfigure ocpp message logging
@@ -166,6 +161,24 @@ struct Callbacks {
     /// \brief Callback function that can be used to handle arbitrary data transfers for all vendorId and
     /// messageId
     std::optional<std::function<DataTransferResponse(const DataTransferRequest& request)>> data_transfer_callback;
+
+    /* Callbacks for networking */
+    /// \brief register a \p callback that is called when the websocket is connected successfully
+    std::optional<std::function<void(const std::optional<NetworkConnectionProfile>& network_connection_profile)>>
+        websocket_connected_callback;
+
+    /// \brief register a \p callback that is called when the websocket connection is disconnected
+    std::optional<std::function<void()>> websocket_disconnected_callback;
+
+    // callback is called when receiving a SetNetworkProfile.req from the CSMS
+    std::optional<std::function<SetNetworkProfileStatusEnum(
+        const int32_t configuration_slot, const NetworkConnectionProfile& network_connection_profile)>>
+        validate_network_profile_callback;
+
+    /// @brief register a \p callback that is called when the network connection profile is to be configured.
+    std::optional<
+        std::function<std::future<ConfigNetworkResult>(const NetworkConnectionProfile& network_connection_profile)>>
+        configure_network_connection_profile_callback;
 };
 
 /// \brief Combines ChangeAvailabilityRequest with persist flag for scheduled Availability changes
@@ -255,8 +268,13 @@ private:
 
     bool send(CallError call_error);
 
+    ConfigNetworkResult config_network_profile_result;
+
     // internal helper functions
-    void init_websocket();
+
+    /// @brief Initialize the websocket connection.
+    /// @param configuration_slot Optional configuration slot to initialize the websocket to.
+    void init_websocket(std::optional<std::string> config_slot = std::nullopt);
     WebsocketConnectionOptions get_ws_connection_options(const int32_t configuration_slot);
     void init_certificate_expiration_check_timers();
     void scheduled_check_client_certificate_expiration();
@@ -561,8 +579,9 @@ public:
     /// \brief Stops the ChargePoint. Disconnects the websocket connection and stops MessageQueue and all timers
     void stop();
 
-    /// \brief Initializes the websocket and connects to CSMS if it is not yet connected
-    void connect_websocket();
+    /// @brief Initializes the websocket and connects to CSMS if it is not yet connected.
+    /// @param configuration_slot Optional configuration slot to connect to
+    void connect_websocket(std::optional<std::string> config_slot = std::nullopt);
 
     /// \brief Disconnects the the websocket connection to the CSMS if it is connected
     /// \param code Optional websocket close status code (default: normal).
@@ -723,6 +742,12 @@ public:
                                                 const AttributeEnum& attribute_enum) {
         return this->device_model->request_value<T>(component_id, variable_id, attribute_enum);
     }
+
+    /// @brief Switch to a specifc network connection profile given the configuration slot.
+    /// This disregards the prority
+    /// @param configuration_slot Slot in which the configuration is stored
+    /// @return true if the switch is possible.
+    bool on_try_switch_network_connection_profile(const std::string configuration_slot);
 };
 
 } // namespace v201
