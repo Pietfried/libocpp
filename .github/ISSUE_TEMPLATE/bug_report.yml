@@ -28,9 +28,9 @@ body:
       label: To Reproduce
       placeholder: |
         If applicable describe the steps to and additional information to reproduce the behavior like:
-        - Message communication between CSMS and ChargePoint
-        - Used configuration(s)
-        - Your system information
+          * Message communication between CSMS and ChargePoint
+          * Used configuration(s)
+          * Your system information
 
   - type: textarea
     id: other
