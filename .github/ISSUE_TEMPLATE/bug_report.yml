@@ -6,7 +6,7 @@ body:
     id: affected-ocpp-version
     attributes:
       label: OCPP Version
-      description: Which OCPP is affected?
+      description: Which OCPP is affected? Mark both if applicable.
       options:
         - OCPP1.6
         - OCPP2.0.1
